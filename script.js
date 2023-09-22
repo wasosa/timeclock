@@ -12,13 +12,17 @@ function pad(value)
 function getTime(date)
 {
     let hours = date.getHours();
-    let period = "AM";
+    let period;
+    if (hours < 12) {
+        period = "AM";
+    } else {
+        period = "PM";
+    }
     if (hours == 0) {
         hours = 12;
     }
     if (hours > 12) {
         hours = hours - 12;
-        period = "PM";
     }
     hours = pad(hours);
     let mins = pad(date.getMinutes());
@@ -52,6 +56,26 @@ function test_getTime()
         {
             date: new Date(0, 0, 0, 0, 0, 0),
             expected: "12:00:00 AM"
+        },
+        {
+            date: new Date(0, 0, 0, 1, 0, 0),
+            expected: "01:00:00 AM"
+        },
+        {
+            date: new Date(0, 0, 0, 11, 0, 0),
+            expected: "11:00:00 AM"
+        },
+        {
+            date: new Date(0, 0, 0, 12, 0, 0),
+            expected: "12:00:00 PM"
+        },
+        {
+            date: new Date(0, 0, 0, 13, 0, 0),
+            expected: "01:00:00 PM"
+        },
+        {
+            date: new Date(0, 0, 0, 23, 0, 0),
+            expected: "11:00:00 PM"
         },
     ]) {
         actual = getTime(params["date"]);
