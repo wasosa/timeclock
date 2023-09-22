@@ -13,6 +13,9 @@ function getTime(date)
 {
     let hours = date.getHours();
     let period = "AM";
+    if (hours == 0) {
+        hours = 12;
+    }
     if (hours > 12) {
         hours = hours - 12;
         period = "PM";
@@ -43,9 +46,17 @@ function assert_equal(actual, expected)
     }
 }
 
-function testDummy()
+function test_getTime()
 {
-    assert_equal("xxx", "xxx");
+    for (params of [
+        {
+            date: new Date(0, 0, 0, 0, 0, 0),
+            expected: "12:00:00 AM"
+        },
+    ]) {
+        actual = getTime(params["date"]);
+        assert_equal(actual, params["expected"]);;
+    }
 }
 
 function test()
@@ -54,7 +65,7 @@ function test()
     console.log("Not in the browser");
     console.log("Running tests!");
 
-    testDummy();
+    test_getTime();
     console.log("All tests passed!");
 }
 
