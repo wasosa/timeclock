@@ -1,0 +1,12 @@
+name: CI
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: node:18.18.0
+      options: --cpus 1
+    steps:
+      - uses: actions/checkout@v4.0.0
+      - run: node script.js
+        shell: bash
