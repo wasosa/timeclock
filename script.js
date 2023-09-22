@@ -23,10 +23,45 @@ function getTime(date)
     return hours + ":" + mins + ":" + secs + " " + period;
 }
 
-let current_time = document.getElementById("current-time");
-setInterval(
-    () => {
-        current_time.innerHTML = getTime(new Date());
-    },
-    100
-);
+function main()
+{
+    let current_time = document.getElementById("current-time");
+    setInterval(
+        () => {
+            current_time.innerHTML = getTime(new Date());
+        },
+        100
+    );
+}
+
+// ---------- start of testing code ----------
+
+function assert_equal(actual, expected)
+{
+    if (actual !== expected) {
+        throw new Error(`\n\nExpected: ${expected}\n  Actual: ${actual}\n`)
+    }
+}
+
+function testDummy()
+{
+    assert_equal("xxx", "xxx");
+}
+
+function test()
+{
+    // We are not running inside a browser!
+    console.log("Not in the browser");
+    console.log("Running tests!");
+
+    testDummy();
+    console.log("All tests passed!");
+}
+
+// ---------- end of testing code ----------
+
+if (typeof document === 'undefined') {
+    test();
+} else {
+    main();
+}
