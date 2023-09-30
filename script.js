@@ -34,15 +34,32 @@ function parseTime(date)
     }
 }
 
-function formatTime(time)
+function formatTime12(time)
 {
     return time.hours12 + ":" + time.minutes + ":" + time.seconds + " " + time.period;
 }
 
-function getTime(date)
+function formatTime24(time)
+{
+    return time.hours24 + ":" + time.minutes + ":" + time.seconds;
+}
+
+function formatTime(time, format)
+{
+    if (format["hours"] == 12) {
+        return formatTime12(time)
+    } else if (format["hours"] == 24) {
+        return formatTime24(time)
+    } else {
+        console.error("Unknown time format; defaulting to 12-hour format")
+        return formatTime12(time)
+    }
+}
+
+function getTime(date, format)
 {
     time = parseTime(date)
-    return formatTime(time)
+    return formatTime(time, format)
 }
 
 function main()
@@ -50,7 +67,7 @@ function main()
     let current_time = document.getElementById("current-time");
     setInterval(
         () => {
-            current_time.innerHTML = getTime(new Date());
+            current_time.innerHTML = getTime(new Date(), { hours: 12 });
         },
         100
     );
@@ -70,31 +87,39 @@ function test_getTime()
     for (params of [
         {
             date: new Date(0, 0, 0, 0, 0, 0),
-            expected: "12:00:00 AM"
+            expected12: "12:00:00 AM",
+            expected24: "00:00:00",
         },
         {
             date: new Date(0, 0, 0, 1, 0, 0),
-            expected: "01:00:00 AM"
+            expected12: "01:00:00 AM",
+            expected24: "01:00:00",
         },
         {
             date: new Date(0, 0, 0, 11, 0, 0),
-            expected: "11:00:00 AM"
+            expected12: "11:00:00 AM",
+            expected24: "11:00:00",
         },
         {
             date: new Date(0, 0, 0, 12, 0, 0),
-            expected: "12:00:00 PM"
+            expected12: "12:00:00 PM",
+            expected24: "12:00:00",
         },
         {
             date: new Date(0, 0, 0, 13, 0, 0),
-            expected: "01:00:00 PM"
+            expected12: "01:00:00 PM",
+            expected24: "13:00:00",
         },
         {
             date: new Date(0, 0, 0, 23, 0, 0),
-            expected: "11:00:00 PM"
+            expected12: "11:00:00 PM",
+            expected24: "23:00:00",
         },
     ]) {
-        actual = getTime(params["date"]);
-        assert_equal(actual, params["expected"]);;
+        actual = getTime(params["date"], { hours: 12 });
+        assert_equal(actual, params["expected12"]);;
+        actual = getTime(params["date"], { hours: 24 });
+        assert_equal(actual, params["expected24"]);;
     }
 }
 
