@@ -9,25 +9,40 @@ function pad(value)
     }
 }
 
-function getTime(date)
+function parseTime(date)
 {
-    let hours = date.getHours();
+    let hours24 = date.getHours();
+    let hours12 = hours24
     let period;
-    if (hours < 12) {
+    if (hours12 < 12) {
         period = "AM";
     } else {
         period = "PM";
     }
-    if (hours == 0) {
-        hours = 12;
+    if (hours12 == 0) {
+        hours12 = 12;
     }
-    if (hours > 12) {
-        hours = hours - 12;
+    if (hours12 > 12) {
+        hours12 = hours12 - 12;
     }
-    hours = pad(hours);
-    let mins = pad(date.getMinutes());
-    let secs = pad(date.getSeconds());
-    return hours + ":" + mins + ":" + secs + " " + period;
+    return {
+        hours12: pad(hours12),
+        hours24: pad(hours24),
+        minutes: pad(date.getMinutes()),
+        seconds: pad(date.getSeconds()),
+        period: period,
+    }
+}
+
+function formatTime(time)
+{
+    return time.hours12 + ":" + time.minutes + ":" + time.seconds + " " + time.period;
+}
+
+function getTime(date)
+{
+    time = parseTime(date)
+    return formatTime(time)
 }
 
 function main()
