@@ -65,9 +65,10 @@ function getTime(date, format)
 function main()
 {
     let current_time = document.getElementById("current-time");
+    let hours = document.currentScript.getAttribute("hours");
     setInterval(
         () => {
-            current_time.innerHTML = getTime(new Date(), { hours: 12 });
+            current_time.innerHTML = getTime(new Date(), { hours: hours });
         },
         100
     );
