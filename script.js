@@ -36,7 +36,7 @@ function parseTime(date)
 
 function formatTime12(time, seconds)
 {
-    if (seconds == "true") {
+    if (seconds) {
         return time.hours12 + ":" + time.minutes + ":" + time.seconds + " " + time.period;
     } else {
         return time.hours12 + ":" + time.minutes + " " + time.period;
@@ -45,7 +45,7 @@ function formatTime12(time, seconds)
 
 function formatTime24(time, seconds)
 {
-    if (seconds == "true") {
+    if (seconds) {
         return time.hours24 + ":" + time.minutes + ":" + time.seconds;
     } else {
         return time.hours24 + ":" + time.minutes;
@@ -54,9 +54,9 @@ function formatTime24(time, seconds)
 
 function formatTime(time, format)
 {
-    if (format["hours"] == 12) {
+    if (format["hours"] == "12") {
         return formatTime12(time, format["seconds"])
-    } else if (format["hours"] == 24) {
+    } else if (format["hours"] == "24") {
         return formatTime24(time, format["seconds"])
     } else {
         console.error("Unknown time format; defaulting to 12-hour format")
@@ -70,14 +70,26 @@ function getTime(date, format)
     return formatTime(time, format)
 }
 
+function getFormat()
+{
+    let hour_format = document.getElementsByName('hour_format');
+    let second_format = document.getElementsByName('second_format');
+    let seconds = second_format[0].checked;
+    let hours;
+    for (e of hour_format) {
+        if (e.checked) {
+            hours = e.value;
+        }
+    }
+    return { hours: hours, seconds: seconds }
+}
+
 function main()
 {
     let current_time = document.getElementById("current-time");
-    let hours = document.currentScript.getAttribute("hours");
-    let seconds = document.currentScript.getAttribute("seconds");
     setInterval(
         () => {
-            current_time.innerHTML = getTime(new Date(), { hours: hours, seconds: seconds });
+            current_time.innerHTML = getTime(new Date(), getFormat());
         },
         100
     );
@@ -138,13 +150,13 @@ function test_getTime()
             expected24s: "23:00:00",
         },
     ]) {
-        actual = getTime(params["date"], { hours: 12, seconds: "false" });
+        actual = getTime(params["date"], { hours: "12", seconds: false });
         assert_equal(actual, params["expected12"]);;
-        actual = getTime(params["date"], { hours: 24, seconds: "false" });
+        actual = getTime(params["date"], { hours: "24", seconds: false });
         assert_equal(actual, params["expected24"]);;
-        actual = getTime(params["date"], { hours: 12, seconds: "true"});
+        actual = getTime(params["date"], { hours: "12", seconds: true });
         assert_equal(actual, params["expected12s"]);;
-        actual = getTime(params["date"], { hours: 24, seconds: "true" });
+        actual = getTime(params["date"], { hours: "24", seconds: true });
         assert_equal(actual, params["expected24s"]);;
     }
 }
