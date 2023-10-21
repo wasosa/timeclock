@@ -11,23 +11,22 @@ function pad(value)
 
 function parseTime(date)
 {
-    let hours24 = date.getHours();
-    let hours12 = hours24
+    let hours = date.getHours();
     let period;
-    if (hours12 < 12) {
+    if (hours < 12) {
         period = "AM";
     } else {
         period = "PM";
     }
-    if (hours12 == 0) {
-        hours12 = 12;
+    if (hours == 0) {
+        hours = 12;
     }
-    if (hours12 > 12) {
-        hours12 = hours12 - 12;
+    if (hours > 12) {
+        hours = hours - 12;
     }
     return {
-        hours12: pad(hours12),
-        hours24: pad(hours24),
+        hours12: pad(hours),
+        hours24: pad(date.getHours()),
         minutes: pad(date.getMinutes()),
         seconds: pad(date.getSeconds()),
         period: period,
